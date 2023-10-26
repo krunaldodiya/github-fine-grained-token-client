@@ -1,1 +1,3 @@
 github-fine-grained-token-client
+fastapi
+uvicorn[standard]
