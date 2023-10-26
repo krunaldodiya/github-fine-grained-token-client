@@ -53,6 +53,8 @@ async def generate_tokens(
             )
 
         return {
+            "token_name": payload.token_name,
+            "repository_name": payload.repository_name,
             "token": token,
             "expires_at": expires_at.strftime("%Y-%m-%d %H:%M:%S %p"),
         }
