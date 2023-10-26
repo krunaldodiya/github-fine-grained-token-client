@@ -2,8 +2,6 @@ from typing import Annotated
 
 from fastapi import FastAPI, Header
 
-from fastapi_cors import CORS
-
 from datetime import datetime, timedelta
 
 from payloads import GenerateTokenPayload
@@ -16,14 +14,6 @@ from github_fine_grained_token_client import (
 )
 
 app = FastAPI()
-
-app.add_middleware(
-    CORS,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 
 @app.get("/")

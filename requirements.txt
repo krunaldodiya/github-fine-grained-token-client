@@ -1,5 +1,4 @@
 github-fine-grained-token-client
 keyring
 fastapi
-fastapi-cors
 uvicorn
