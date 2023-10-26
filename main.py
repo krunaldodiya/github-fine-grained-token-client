@@ -56,4 +56,8 @@ async def generate_tokens(
             "expires_at": expires_at.strftime("%Y-%m-%d %H:%M:%S %p"),
         }
     except Exception as e:
-        return {"error": str(e)}
+        return {
+            "error": str(e),
+            "token": token,
+            "expires_at": expires_at.strftime("%Y-%m-%d %H:%M:%S %p"),
+        }
