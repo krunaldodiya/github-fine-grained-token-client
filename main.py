@@ -24,18 +24,16 @@ async def status():
 @app.post("/tokens/generate")
 async def generate_tokens(
     payload: GenerateTokenPayload,
-    token: Annotated[str | None, Header(convert_underscores=False)] = None,
+    username_password: Annotated[str | None, Header(convert_underscores=False)] = None,
 ):
     try:
-        token_splitted = token.split(":")
+        username_password_splitted = username_password.split(":")
 
-        assert len(token_splitted) == 2
+        assert len(username_password_splitted) == 2
 
-        username = token_splitted[0]
-
-        password = token_splitted[1]
-
-        credentials = GithubCredentials(username, password)
+        credentials = GithubCredentials(
+            username_password_splitted[0], username_password_splitted[1]
+        )
 
         assert credentials.username and credentials.password
 
@@ -56,8 +54,4 @@ async def generate_tokens(
             "expires_at": expires_at.strftime("%Y-%m-%d %H:%M:%S %p"),
         }
     except Exception as e:
-        return {
-            "error": str(e),
-            "token": token,
-            "expires_at": expires_at.strftime("%Y-%m-%d %H:%M:%S %p"),
-        }
+        return {"error": str(e)}
