@@ -31,6 +31,8 @@ async def generate_tokens(
     try:
         token_splitted = token.split(":")
 
+        assert len(token_splitted) == 2
+
         username = token_splitted[0]
 
         password = token_splitted[1]
