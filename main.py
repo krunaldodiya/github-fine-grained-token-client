@@ -19,7 +19,7 @@ app = FastAPI()
 
 
 @app.get("/")
-async def home():
+async def status():
     return {"status": "okay"}
 
 
