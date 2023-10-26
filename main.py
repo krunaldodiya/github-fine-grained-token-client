@@ -1,8 +1,59 @@
-from fastapi import FastAPI
+from typing import Annotated
+
+from fastapi import FastAPI, Header
+
+from datetime import datetime, timedelta
+
+
+from github_fine_grained_token_client import (
+    BlockingPromptTwoFactorOtpProvider,
+    GithubCredentials,
+    SelectRepositories,
+    async_client,
+)
+
+from payloads import GenerateTokenPayload
+
 
 app = FastAPI()
 
 
 @app.get("/")
-def home():
+async def home():
     return {"status": "okay"}
+
+
+@app.post("/tokens/generate")
+async def generate_tokens(
+    payload: GenerateTokenPayload,
+    token: Annotated[str | None, Header(convert_underscores=False)] = None,
+):
+    try:
+        token_splitted = token.split(":")
+
+        username = token_splitted[0]
+
+        password = token_splitted[1]
+
+        credentials = GithubCredentials(username, password)
+
+        assert credentials.username and credentials.password
+
+        async with async_client(
+            credentials=credentials,
+            two_factor_otp_provider=BlockingPromptTwoFactorOtpProvider(),
+        ) as session:
+            expires_at = datetime.now() + timedelta(days=364)
+
+            token = await session.create_token(
+                payload.token_name,
+                expires=expires_at,
+                scope=SelectRepositories([payload.repository_name]),
+            )
+
+        return {
+            "token": token,
+            "expires_at": expires_at.strftime("%Y-%m-%d %H:%M:%S %p"),
+        }
+    except Exception as e:
+        return {"error": str(e)}
