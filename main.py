@@ -46,7 +46,7 @@ async def generate_tokens(
             expires_at = datetime.now() + timedelta(days=364)
 
             token = await session.create_token(
-                payload.token_name,
+                name=payload.token_name,
                 expires=expires_at,
                 scope=SelectRepositories([payload.repository_name]),
             )
