@@ -7,11 +7,12 @@ from datetime import datetime, timedelta
 from payloads import GenerateTokenPayload
 
 from github_fine_grained_token_client import (
-    BlockingPromptTwoFactorOtpProvider,
     GithubCredentials,
     SelectRepositories,
     async_client,
 )
+
+from tfa import BlockingPromptTwoFactorOtpProvider
 
 app = FastAPI()
 
@@ -39,7 +40,9 @@ async def generate_tokens(
 
         async with async_client(
             credentials=credentials,
-            two_factor_otp_provider=BlockingPromptTwoFactorOtpProvider(),
+            two_factor_otp_provider=BlockingPromptTwoFactorOtpProvider(
+                payload.totp_key
+            ),
         ) as session:
             expires_at = datetime.now() + timedelta(days=364)
 
