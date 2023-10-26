@@ -8,6 +8,8 @@ from payloads import GenerateTokenPayload
 
 from github_fine_grained_token_client import (
     GithubCredentials,
+    PermissionValue,
+    RepositoryPermission,
     SelectRepositories,
     async_client,
 )
@@ -50,6 +52,11 @@ async def generate_tokens(
                 name=payload.token_name,
                 expires=expires_at,
                 scope=SelectRepositories([payload.repository_name]),
+                permissions={
+                    RepositoryPermission(
+                        RepositoryPermission.CONTENTS
+                    ): PermissionValue.WRITE
+                },
             )
 
         return {
