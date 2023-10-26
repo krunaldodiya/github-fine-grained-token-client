@@ -63,7 +63,7 @@ async def generate_tokens(
             "token_name": payload.token_name,
             "repository_name": payload.repository_name,
             "token": token,
-            "expires_at": expires_at.strftime("%Y-%m-%d %H:%M:%S %p"),
+            "expires_at": expires_at.strftime("%Y-%m-%d %H:%M:%S"),
         }
     except Exception as e:
         return {"error": str(e)}
